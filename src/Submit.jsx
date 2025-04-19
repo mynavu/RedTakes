@@ -127,27 +127,27 @@ async function query(data) {
 
   for (let attempt = 1; attempt <= maxRetries; attempt++) {
     try {
-      const response = await fetch(
-        'https://api-inference.huggingface.co/models/cardiffnlp/twitter-roberta-base-sentiment-latest',
-        {
-          headers: {
-            Authorization: `Bearer ${hf_token}`,
-            'Content-Type': 'application/json',
-          },
-          method: 'POST',
-          body: JSON.stringify({ inputs: data }),
-        }
-      );
+      const response = await fetch('/.netlify/functions/proxy', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ inputs: data }),
+      });
+      
+
       if (!response.ok) {
         if (response.status === 429) {
           // Rate limit: wait longer
           const delay = baseDelay * 2 ** attempt;
           console.warn(`Rate limit hit, retrying after ${delay}ms...`);
-          await new Promise(resolve => setTimeout(resolve, delay));
+          await new Promise((resolve) => setTimeout(resolve, delay));
           continue;
         }
         throw new Error(`HTTP ${response.status}`);
       }
+      
+
       const result = await response.json();
       return result;
     } catch (error) {
@@ -183,6 +183,7 @@ export function Submit({ tagsList, time, sortBy, updateSentiment, updateFullPost
     const response = await query(postTitle);
     if (!response || !response[0]) {
       console.warn(`Skipping post "${postTitle}" due to invalid response`);
+      post.sentiment = null;
       continue;
     }
     let max = 0;

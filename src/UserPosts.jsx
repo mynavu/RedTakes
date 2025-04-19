@@ -26,7 +26,7 @@ export function UserPosts({ fullPosts, loading }) {
                     <h4>r/{post.subreddit}</h4>
                     <h3 className="font-bold underline"><a target="_blank" href={`https://www.reddit.com${post.permalink}`}>{post.title}</a></h3>
                     <h4>{post.text}</h4>
-                    <h4 className="mt-2"> <span className="rounded-md pl-1 pr-1" style={{ color: colorSet[post.sentiment], background: highlightSetTransparent[post.sentiment] }}>{post.sentiment}</span></h4>
+                    <h4 className={`mt-2 ${post.sentiment ? "block" : "hidden"}`}> <span className="rounded-md pl-1 pr-1" style={{ color: colorSet[post.sentiment], background: highlightSetTransparent[post.sentiment] }}>{post.sentiment}</span></h4>
                 </div>
                 )
              )}
