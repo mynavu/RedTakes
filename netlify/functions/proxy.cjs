@@ -2,7 +2,7 @@ const axios = require('axios');
 
 const hf_token = "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";
 
-export const handler = async (event, context) => {
+exports.handler = async (event, context) => {
   console.log('Function invoked:', { method: event.httpMethod, body: event.body });
 
   if (event.httpMethod !== 'POST') {
